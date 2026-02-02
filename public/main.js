@@ -1,5 +1,5 @@
-//const myServerUrl = 'https://video-customer-support-production.up.railway.app';
-const myServerUrl = 'http://localhost:3000'; // Update this with your server URL
+const myServerUrl = 'https://videocustomer-cisco-production.up.railway.app';
+//const myServerUrl = 'http://localhost:3000'; // Update this with your server URL
 async function getAccessToken() {
     const url = myServerUrl + '/get-access-token';
     const requestOptions = {
