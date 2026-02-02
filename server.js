@@ -150,14 +150,14 @@ app.post('/request-access', async (req, res) => {
     setTimeout(() => {
       // Obtener los IDs de la variable de entorno
       const webexRoomIds = process.env.WEBEX_MEETINGS_ROOMS_IDS;
-      let redirectPath = '/?';
+      let redirectPath = '/';
       if (webexRoomIds) {
         // Separar los IDs por comas y limpiar espacios en blanco
         const idsArray = webexRoomIds.split(',').map(id => id.trim());
         // Seleccionar un ID aleatorio
         const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
         // Construir la ruta de redirect
-        redirectPath = `/sipAddress=${randomId}`;
+        redirectPath = `/?sipAddress=${randomId}`;
       }
       res.status(200).json({ redirect: redirectPath });
     }, 4000);
