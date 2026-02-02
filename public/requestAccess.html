@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solicitar Acceso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="styles/generalStyle.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-icon">
+            <i class="fas fa-headset"></i>
+        </div>
+        <h2>Solicitud de acceso</h2>
+        <form id="accessForm">
+            <label>
+                Nombre y Apellido
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" name="fullname" id="fullname" required />
+                </div>
+            </label>
+
+            <label>
+                Correo electrónico
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="email" id="email" required />
+                </div>
+            </label>
+
+            <label>
+                Tipo de número de identificación
+                <div class="input-wrapper">
+                    <i class="fas fa-address-card input-icon"></i>
+                    <select name="idType" id="idType" required>
+                        <option value="cedula">Cédula</option>
+                        <option value="pasaporte">Pasaporte</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </label>
+
+            <label>
+                Número de identificación
+                <div class="input-wrapper">
+                    <i class="fas fa-id-card input-icon"></i>
+                    <input type="text" name="idNumber" id="idNumber" required />
+                </div>
+            </label>
+
+            <label>
+                Tipo de solicitud
+                <div class="input-wrapper">
+                    <i class="fas fa-clipboard-list input-icon"></i>
+                    <select name="requestType" id="requestType" required>
+                        <option value="General">General</option>
+                        <option value="Consulta">Consulta</option>
+                        <option value="Tramite">Trámite</option>
+                    </select>
+                </div>
+            </label>
+
+            <button type="submit">
+                <i class="fas fa-paper-plane"></i> Enviar
+            </button>
+        </form>
+
+        <div id="notice" class="notice">
+            <i class="fas fa-spinner"></i>
+            Evaluando disponibilidad de un agente…
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('accessForm');
+        const notice = document.getElementById('notice');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const data = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                idNumber: document.getElementById('idNumber').value,
+                idType: document.getElementById('idType').value,
+                requestType: document.getElementById('requestType').value
+            };
+
+            // Mostrar notificación y deshabilitar formulario
+            notice.style.display = 'block';
+            Array.from(form.elements).forEach(el => el.disabled = true);
+
+            try {
+                // Enviar POST al servidor y esperar la respuesta (el servidor realizará la espera de ~3s)
+                const resp = await fetch('/request-access', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const body = await resp.json();
+                if (body && body.redirect) {
+                    window.location.href = body.redirect;
+                }
+            } catch (err) {
+                console.error('Error enviando datos:', err);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Video Support Simple Demo</title>
-    <link
-      href="https://cdn.jsdelivr.net/gh/WXSD-Sales/embeddable-meetings-widget/docs/webex-widgets.css"
-    />
-    <script src="https://cdn.jsdelivr.net/gh/WXSD-Sales/embeddable-meetings-widget/docs/bundle.js"></script>
-  </head>
-  <style>
-    /* Style to change Text size depending on screen size */
+
+<head>
+  <title>Video Support Simple Demo</title>
+  <link href="https://cdn.jsdelivr.net/gh/WXSD-Sales/embeddable-meetings-widget/docs/webex-widgets.css" />
+  <link rel="stylesheet" href="styles/generalStyle.css">
+  <script src="https://cdn.jsdelivr.net/gh/WXSD-Sales/embeddable-meetings-widget/docs/bundle.js"></script>
+</head>
+<style>
+  /* Style to change Text size depending on screen size */
+  #message {
+    font-family: Arial, sans-serif;
+  }
+
+  /* Apply this only on mobile devices (max-width: 768px) */
+  @media (max-width: 1500px) {
     #message {
-      font-family: Arial, sans-serif;
+      font-size: 60px;
+      /* Bigger text only on mobile */
     }
-    /* Apply this only on mobile devices (max-width: 768px) */
-    @media (max-width: 1500px) {
-      #message {
-        font-size: 60px; /* Bigger text only on mobile */
-      }
-    }
-  </style>
- 
-  <body>
+  }
+</style>
+
+<body>
+  <div class="webex-container">
     <p id="message"></p>
     <div id="embeddable-meetings-widget"></div>
     <script src="./main.js"></script>
@@ -37,25 +40,27 @@
           }
           else {
             message =
-              "Hi there! Welcome to our video support page. Please wait for the host to start the meeting";
+              "¡Hola! Bienvenido a nuestra página de asistencia por vídeo. Por favor, espere a que el anfitrión inicie la reunión.";
           }
           document.getElementById("message").textContent = message;
           webexMeetingsWidget({
             accessToken: token,
             meetingDestination: sipAddress,
-            theme: "light",
+            theme: "dark",
             draggable: false,
-            width: "100%",
-            height: "100%",
+            width: "76%",
+            height: "76%",
             layout: "Grid",
             inMeetingControls: ["mute-audio", "leave-meeting"],
             interstitialControls: ["join-meeting"],
           });
         }
         catch (error) {
-          console.log ('Error getting the access token from the backend: ', error);
+          console.log('Error getting the access token from the backend: ', error);
         }
       })();
     </script>
-  </body>
+  </div>
+</body>
+
 </html>
