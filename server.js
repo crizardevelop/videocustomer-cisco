@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
 }
 
-const refreshToken = process.env.REFRESH_TOKEN;
+var refreshToken = process.env.REFRESH_TOKEN;
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const port = process.env.PORT || 3000;
@@ -34,7 +34,9 @@ async function refreshAccessToken() {
   }
   try {
     const response = await axios.request(config);
+    console.log('Access token response data:', response.data);
     guestIssuerServiceAppToken = response.data.access_token;
+    refreshToken = response.data.refresh_token;
     console.log('Access token refreshed successfully');
     console.log('Refresh Access Token API status code:', response.status);
   } catch (error) {

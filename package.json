@@ -16,7 +16,7 @@
   "author": "Victor Vazquez",
   "license": "ISC",
   "repository": {
-    "url": "https://video-customer-support-production.up.railway.app"
+    "url": "https://videocustomer-cisco-production.up.railway.app/"
   },
   "engines": {
     "node": "18.x"
