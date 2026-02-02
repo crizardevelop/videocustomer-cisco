@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const cron = require('node-cron');
 
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
@@ -17,20 +17,20 @@ const port = process.env.PORT || 3000;
 let guestIssuerServiceAppToken = '';
 
 async function refreshAccessToken() {
-  const data = 
+  const data =
     new URLSearchParams({
-    'grant_type': 'refresh_token',
-    'refresh_token': refreshToken,
-    'client_id': clientId,
-    'client_secret': clientSecret
+      'grant_type': 'refresh_token',
+      'refresh_token': refreshToken,
+      'client_id': clientId,
+      'client_secret': clientSecret
     });
   const config = {
     method: 'post',
     url: 'https://webexapis.com/v1/access_token',
-    headers: { 
+    headers: {
       'Content-type': 'application/x-www-form-urlencoded'
     },
-    data : data.toString()
+    data: data.toString()
   }
   try {
     const response = await axios.request(config);
@@ -44,11 +44,11 @@ async function refreshAccessToken() {
     throw (error);
     // alternative: remove the console.log and build a New Error object that includes error received:
     // throw new Error ('Error refreshing the access token:', {cause: error } )
-  }  
+  }
 }
 
 // Enable CORS for all routes
-app.use(cors()); 
+app.use(cors());
 // Parse URL-encoded and JSON bodies for POST requests
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
     await refreshAccessToken();
   }
   catch (error) {
-    console.error('Initial token refresh failed',  error );
+    console.error('Initial token refresh failed', error);
   }
 })();
 
@@ -71,7 +71,7 @@ cron.schedule('0 13 * * *', async () => {
     await refreshAccessToken();
   }
   catch (error) {
-    console.error ('Scheduled token refresh failed', error );
+    console.error('Scheduled token refresh failed', error);
   }
 });
 
@@ -83,11 +83,11 @@ app.get('/get-access-token', async (req, res) => {
   const config = {
     method: 'post',
     url: 'https://webexapis.com/v1/guests/token',
-    headers: { 
-      'Content-Type': 'application/json', 
+    headers: {
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + guestIssuerServiceAppToken
     },
-    data : data
+    data: data
   };
 
   try {
@@ -146,10 +146,21 @@ app.post('/request-access', async (req, res) => {
 
     console.log('Solicitud guardada en', csvPath);
 
-    // Esperar ~3 segundos en el servidor y luego enviar instrucción de redirección
+    // Esperar ~4 segundos en el servidor y luego enviar instrucción de redirección
     setTimeout(() => {
-      res.status(200).json({ redirect: '/' });
-    }, 3000);
+      // Obtener los IDs de la variable de entorno
+      const webexRoomIds = process.env.WEBEX_MEETINGS_ROOMS_IDS;
+      let redirectPath = '/';
+      if (webexRoomIds) {
+        // Separar los IDs por comas y limpiar espacios en blanco
+        const idsArray = webexRoomIds.split(',').map(id => id.trim());
+        // Seleccionar un ID aleatorio
+        const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
+        // Construir la ruta de redirect
+        redirectPath = `/sipAddress=${randomId}`;
+      }
+      res.status(200).json({ redirect: redirectPath });
+    }, 4000);
 
   } catch (err) {
     console.error('Error escribiendo CSV:', err);
