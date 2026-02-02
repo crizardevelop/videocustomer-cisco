@@ -150,7 +150,7 @@ app.post('/request-access', async (req, res) => {
     setTimeout(() => {
       // Obtener los IDs de la variable de entorno
       const webexRoomIds = process.env.WEBEX_MEETINGS_ROOMS_IDS;
-      let redirectPath = '/';
+      let redirectPath = '/?';
       if (webexRoomIds) {
         // Separar los IDs por comas y limpiar espacios en blanco
         const idsArray = webexRoomIds.split(',').map(id => id.trim());
